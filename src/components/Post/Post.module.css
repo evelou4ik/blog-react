@@ -1,0 +1,21 @@
+.post {
+    min-height: 300px;
+    text-align: justify;
+    border-radius: 15px;
+    padding: 20px;
+    padding-bottom: 20px;
+    background-color: #20123A;
+    color: white;
+    line-height: 25px;
+}
+
+.post-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.post__footer {
+    margin-top: auto;
+}
+
