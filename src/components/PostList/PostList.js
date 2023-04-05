@@ -1,17 +1,17 @@
-import React from 'react';
 import Post from "../Post/Post";
 
 import styles from './PostList.module.css'
 
-const PostList = ({posts, onOpenPost}) => {
+const PostList = ({posts, requestPostById}) => {
+
+    const sortedPostsByDate = posts.sort((a,b) => b.dateOfCreate - a.dateOfCreate)
+
     return (
         <ul className={styles.posts}>
-            {posts.map(post => {
-                if(post.id < 11) {
-                    return (
-                        <Post onOpenPost={onOpenPost} key={post.id} dataPost={post} />
-                    )
-                }
+            {sortedPostsByDate.map(post => {
+                return (
+                    <Post requestPostById={requestPostById} key={post.id} dataPost={post} />
+                )
             })}
         </ul>
     );

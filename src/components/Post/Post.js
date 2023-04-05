@@ -1,34 +1,29 @@
-import React, {useEffect, useState} from 'react';
-import styles from './Post.module.css'
+import {useEffect, useState} from 'react';
 
-const Post = ({dataPost, onOpenPost}) => {
+import Button from "../UI/Button/Button";
+
+import postStyles from './Post.module.css';
+import btnStyles from '../UI/Button/Button.module.css'
+
+
+
+const Post = ({dataPost, requestPostById}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const openPostHandler = () => {
-        if(isOpen === true) {
-            setIsOpen(false)
-
-        } else {
-            setIsOpen(true)
-
-        }
+        setIsOpen(!isOpen)
+        requestPostById(dataPost.id)
     }
 
-    useEffect(() => {
-        if(isOpen === true) {
-            onOpenPost(dataPost.id)
-        }
-    }, [isOpen])
-
     return (
-        <li className={styles.post}>
-            <div className={styles['post-content']}>
+        <li className={postStyles.post}>
+            <div className={postStyles['post-content']}>
                 <div className="post__body">
                     <span>{dataPost.title}</span>
                     <p>{dataPost.body}</p>
                 </div>
-                <div className={styles.post__footer}>
-                    <button onClick={openPostHandler} type="button" className={styles.btn}>Read more</button>
+                <div className={postStyles.post__footer}>
+                    <Button className={btnStyles.btn} typeButton={"button"} onClickHandler={openPostHandler}>Read more</Button>
                 </div>
             </div>
         </li>

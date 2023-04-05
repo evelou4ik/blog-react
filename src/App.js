@@ -1,55 +1,99 @@
-import React, {useState, useEffect} from 'react';
-import PostList from "./components/PostList/PostList";
+import {useState, useEffect} from 'react';
+import Posts from "./components/Posts/Posts";
 import PostPage from "./components/PostPage/PostPage";
 
 function App() {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoaded] = useState(true);
+    const [posts, setPosts] = useState([]);
+    const [openedPost, setOpenedPost] = useState(null);
 
-  const [items, setItems] = useState([]);
-  const [isPostOpen, setIsPostOpen] = useState(false);
-  const [openedPost, setOpenedPost] = useState({})
+    const isPostOpen = !!openedPost;
 
-  useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/posts')
-        .then(res => res.json())
-        .then(result => {
-          setIsLoaded(true);
-          setItems(result)
-        },
-        (error) => {
-            setIsLoaded(true);
-            setError(error);
+    const requestAllPosts = () => {
+        fetch('http://localhost:3001/posts')
+            .then(res => res.json())
+            .then(result => {
+                    setPosts(result)
+                },
+                (error) => {
+                    setError(error);
+                })
+            .finally(() => {
+                setIsLoaded(false);
+            })
+    }
+
+    useEffect(() => {
+        requestAllPosts()
+    }, []);
+
+
+    const requestPostById = (idPost) => {
+        const openedPost = posts.find(el => el.id === idPost);
+
+        setOpenedPost(openedPost);
+    }
+
+    const onClose = () => {
+        setOpenedPost(null);
+    }
+
+    const onUpdatePost = (postId, postTitle, postBody) => {
+        fetch(`http://localhost:3001/posts/${postId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                title: postTitle,
+                postBody: postBody,
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
         })
-  }, []);
+            .then(() => {
+                requestAllPosts()
+            })
+    }
 
-  const requestPostById = (idPost) => {
-      fetch(`https://jsonplaceholder.typicode.com/posts/${idPost}`)
-          .then((post) => post.json())
-          .then(result => {
-              setIsPostOpen(true)
-              setOpenedPost(result)
-          })
-  }
+    const onAddNewPost = (newPost) => {
+        fetch('http://localhost:3001/posts', {
+            method: 'POST',
+            body: JSON.stringify({
+                ...newPost
+            }),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8'
+            },
+        })
+            .then(() => {
+                requestAllPosts()
+            })
+    }
 
-  const closePostHandler = () => {
-    setIsPostOpen(false);
-  }
+    const onDeletePost = (postId) => {
+        fetch(`http://localhost:3001/posts/${postId}`, {
+            method: 'DELETE'
+        })
+    }
 
-  if(error) {
-      return <div>Error: {error.message}</div>;
-  } else if(!isLoaded) {
-      return <div>Loading...</div>
-  } else {
-      return (
-          <div className="App">
-              {
-                  isPostOpen ? <PostPage onClose={closePostHandler} post={openedPost} /> : <PostList onOpenPost={requestPostById} posts={items}/>
-              }
-          </div>
-      );
-  }
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
 
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+
+    return (
+        <div className="App">
+            {
+                isPostOpen ?
+                    <PostPage onUpdatePost={onUpdatePost} onDeletePost={onDeletePost} requestPosts={requestAllPosts}
+                              onClose={onClose} post={openedPost}/> :
+                    <Posts onAddNewPost={onAddNewPost} requestPostById={requestPostById} posts={posts}/>
+            }
+        </div>
+    );
 }
 
 export default App;

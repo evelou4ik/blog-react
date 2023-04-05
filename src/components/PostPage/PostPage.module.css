@@ -1,0 +1,44 @@
+.post-page {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+.post-page label {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+
+.post-page label span {
+    display: block;
+}
+
+.post-page textarea {
+    overflow-y: auto;
+    min-height: 150px;
+    resize: none;
+}
+
+.post-page input, .post-page textarea {
+    padding: 6px;
+    border-radius: 0.5rem;
+    outline: none;
+    border: 1px solid rgba(0,0,0,0.3);
+    transition-property: border-color;
+    transition-duration: .3s;
+}
+
+.post-page input[readonly], .post-page input[readonly]:focus, .post-page textarea[readonly], .post-page textarea[readonly]:focus {
+    border-color: transparent;
+}
+
+.post-page input:focus, .post-page textarea:focus {
+    border-color: #20123A;
+}
+
+.post-page button {
+    width: 100%;
+    margin: 10px 0;
+}

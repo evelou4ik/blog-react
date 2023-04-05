@@ -1,0 +1,19 @@
+.btn {
+    min-width: 10rem;
+    margin: 1rem;
+    border: none;
+    font-weight: bolder;
+    padding: 8px;
+    background-color: white;
+    color: black;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 17px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.btn-dark {
+    color: white;
+    background-color: black;
+}
+

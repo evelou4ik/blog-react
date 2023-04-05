@@ -1,7 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  background-color: #3f3f3f;
   font-family: 'Open Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -11,3 +16,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+html {
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+textarea {
+  resize: none;
+}
+
+
