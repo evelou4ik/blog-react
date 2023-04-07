@@ -13,6 +13,7 @@
 
 .post-page label span {
     display: block;
+    color: #fff;
 }
 
 .post-page textarea {
@@ -26,12 +27,14 @@
     border-radius: 0.5rem;
     outline: none;
     border: 1px solid rgba(0,0,0,0.3);
-    transition-property: border-color;
+    transition-property: border-color, background-color;
     transition-duration: .3s;
 }
 
 .post-page input[readonly], .post-page input[readonly]:focus, .post-page textarea[readonly], .post-page textarea[readonly]:focus {
+    background-color: transparent;
     border-color: transparent;
+    cursor: default;
 }
 
 .post-page input:focus, .post-page textarea:focus {

@@ -1,18 +1,22 @@
+import uuid from 'react-uuid';
 import Post from "../Post/Post";
 
 import styles from './PostList.module.css'
 
-const PostList = ({posts, requestPostById}) => {
+const PostList = (props) => {
+    const {posts, openPostById} = props;
 
-    const sortedPostsByDate = posts.sort((a,b) => b.dateOfCreate - a.dateOfCreate)
+    const sortedPostsByDate = posts.sort((a,b) => b.dateOfCreate - a.dateOfCreate);
 
     return (
         <ul className={styles.posts}>
-            {sortedPostsByDate.map(post => {
-                return (
-                    <Post requestPostById={requestPostById} key={post.id} dataPost={post} />
-                )
-            })}
+            {
+                sortedPostsByDate.map(post => {
+                    return (
+                        <Post openPostById={openPostById} key={uuid()} dataPost={post} />
+                    )
+                })
+            }
         </ul>
     );
 };

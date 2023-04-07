@@ -6,7 +6,7 @@
 
 body {
   margin: 0;
-  background-color: #3f3f3f;
+  background-color: #9b9b9b;
   font-family: 'Open Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -20,6 +20,10 @@ code {
 html {
   font-family: 'Noto Sans JP', sans-serif;
 }
+input,textarea {
+  background-color: #fff;
+}
+
 
 textarea {
   resize: none;

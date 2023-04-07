@@ -1,18 +1,18 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 
 import Button from "../UI/Button/Button";
 
 import postStyles from './Post.module.css';
 import btnStyles from '../UI/Button/Button.module.css'
 
+const Post = (props) => {
+    const {dataPost, openPostById} = props;
 
-
-const Post = ({dataPost, requestPostById}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const openPostHandler = () => {
         setIsOpen(!isOpen)
-        requestPostById(dataPost.id)
+        openPostById(dataPost.id)
     }
 
     return (

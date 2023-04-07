@@ -1,6 +1,9 @@
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
+import {Routes, Route, Link} from 'react-router-dom';
 import Posts from "./components/Posts/Posts";
 import PostPage from "./components/PostPage/PostPage";
+
+
 
 function App() {
     const [error, setError] = useState(null);
@@ -8,11 +11,28 @@ function App() {
     const [posts, setPosts] = useState([]);
     const [openedPost, setOpenedPost] = useState(null);
 
+    const urlOfPosts = "http://localhost:3001/posts";
     const isPostOpen = !!openedPost;
 
-    const requestAllPosts = () => {
-        fetch('http://localhost:3001/posts')
-            .then(res => res.json())
+    const fetchApiHandler = async (url, method, body) => {
+        const options = {
+            method: method,
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        };
+
+        if (body) {
+            options.body = JSON.stringify(body)
+        }
+
+        return await fetch(url, options);
+
+    }
+
+    const requestAllPostsHandler = () => {
+        fetchApiHandler(urlOfPosts)
+            .then(response => response.json())
             .then(result => {
                     setPosts(result)
                 },
@@ -25,55 +45,38 @@ function App() {
     }
 
     useEffect(() => {
-        requestAllPosts()
+        requestAllPostsHandler()
     }, []);
 
-
-    const requestPostById = (idPost) => {
+    const openPostById = (idPost) => {
         const openedPost = posts.find(el => el.id === idPost);
 
         setOpenedPost(openedPost);
     }
 
-    const onClose = () => {
+    const closeHandler = () => {
         setOpenedPost(null);
     }
 
-    const onUpdatePost = (postId, postTitle, postBody) => {
-        fetch(`http://localhost:3001/posts/${postId}`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                title: postTitle,
-                postBody: postBody,
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
+    const updatePostHandler = (postId, postTitle, postBody) => {
+        fetchApiHandler(`${urlOfPosts}/${postId}`, 'PATCH', {title: postTitle, body: postBody})
             .then(() => {
-                requestAllPosts()
+                requestAllPostsHandler()
             })
     }
 
-    const onAddNewPost = (newPost) => {
-        fetch('http://localhost:3001/posts', {
-            method: 'POST',
-            body: JSON.stringify({
-                ...newPost
-            }),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8'
-            },
-        })
+    const addNewPostHandler = (newPost) => {
+        fetchApiHandler(urlOfPosts, 'POST', {...newPost})
             .then(() => {
-                requestAllPosts()
+                requestAllPostsHandler()
             })
     }
 
-    const onDeletePost = (postId) => {
-        fetch(`http://localhost:3001/posts/${postId}`, {
-            method: 'DELETE'
-        })
+    const deletePostHandler = (postId) => {
+        fetchApiHandler(`${urlOfPosts}/${postId}`, 'DELETE')
+            .then(() => {
+                requestAllPostsHandler()
+            })
     }
 
     if (error) {
@@ -88,9 +91,13 @@ function App() {
         <div className="App">
             {
                 isPostOpen ?
-                    <PostPage onUpdatePost={onUpdatePost} onDeletePost={onDeletePost} requestPosts={requestAllPosts}
-                              onClose={onClose} post={openedPost}/> :
-                    <Posts onAddNewPost={onAddNewPost} requestPostById={requestPostById} posts={posts}/>
+                    <PostPage
+                        onUpdatePost={updatePostHandler}
+                        onDeletePost={deletePostHandler}
+                        onClose={closeHandler}
+                        post={openedPost}/>
+                    :
+                    <Posts onAddNewPost={addNewPostHandler} openPostById={openPostById} posts={posts}/>
             }
         </div>
     );

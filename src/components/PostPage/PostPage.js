@@ -1,38 +1,40 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 
 import Button from "../UI/Button/Button";
 
 import postPageStyles from './PostPage.module.css'
 import btnStyles from '../UI/Button/Button.module.css'
 
-const PostPage = ({onClose, onUpdatePost, onDeletePost, requestPosts, post}) => {
-    const [isTitleValue, setIsTitleValue] = useState(post.title);
-    const [isBodyValue, setIsBodyValue] = useState(post.body);
+const PostPage = (props) => {
+    const {onClose, onUpdatePost, onDeletePost, post} = props;
+
+    const [title, setTitle] = useState(post.title);
+    const [body, setBody] = useState(post.body);
     const [isEditMode, setIsEditMode] = useState(false);
 
     const postEditHandler = (e) => {
         e.preventDefault();
 
-        onUpdatePost(post.id, isTitleValue, isBodyValue)
+        onUpdatePost(post.id, title, body)
         setIsEditMode(!isEditMode)
     }
 
-    const changePostHandler = (e) => {
+    const editModeHandler = (e) => {
         e.preventDefault();
 
         setIsEditMode(!isEditMode)
     }
 
     const titleChangeHandler = (e) => {
-        setIsTitleValue(e.target.value)
+        setTitle(e.target.value)
     }
 
     const bodyChangeHandler = (e) => {
-        setIsBodyValue(e.target.value)
+        setBody(e.target.value)
     }
 
     const deletePostHandler = () => {
-        const deleteConfirm = window.confirm("Are you sure you want to delete this?")
+        const deleteConfirm = window.confirm("Are you sure you want to delete this?");
 
         if (!deleteConfirm) {
             return;
@@ -40,38 +42,50 @@ const PostPage = ({onClose, onUpdatePost, onDeletePost, requestPosts, post}) => 
 
         onDeletePost(post.id);
         onClose();
-        requestPosts();
     }
-
 
     return (
         <div className={postPageStyles['post-page']}>
             <form>
                 <label>
-                    <span>Title: </span>
-                    <input onChange={titleChangeHandler} value={isTitleValue} type="text"
+                    <span>Title:</span>
+                    <input onChange={titleChangeHandler} value={title} type="text"
                            readOnly={isEditMode ? false : true}/>
                 </label>
                 <label htmlFor="">
-                    <span>
-                        Body Post:
-                    </span>
-                    <textarea onChange={bodyChangeHandler} defaultValue={isBodyValue}
+                    <span>Body Post:</span>
+                    <textarea onChange={bodyChangeHandler} value={body}
                               readOnly={isEditMode ? false : true}/>
                 </label>
-
                 {
                     isEditMode ?
-                        <Button className={`${btnStyles.btn} ${btnStyles["btn-dark"]}`} typeButton={"submit"}
-                                onClickHandler={postEditHandler}>Update</Button> :
-                        <Button className={`${btnStyles.btn} ${btnStyles["btn-dark"]}`} typeButton={"button"}
-                                onClickHandler={changePostHandler}>Change</Button>
+                        <Button
+                            className={`${btnStyles.btn} ${btnStyles["btn-dark"]}`}
+                            typeButton={"submit"}
+                            onClickHandler={postEditHandler}>
+                            Update
+                        </Button>
+                        :
+                        <Button
+                            className={`${btnStyles.btn} ${btnStyles["btn-dark"]}`}
+                            typeButton={"button"}
+                            onClickHandler={editModeHandler}>
+                            Change
+                        </Button>
                 }
             </form>
-            <Button className={`${btnStyles.btn} ${btnStyles["btn-dark"]}`} type="button"
-                    onClickHandler={deletePostHandler}>Delete</Button>
-            <Button className={`${btnStyles.btn} ${btnStyles["btn-dark"]}`} type="button"
-                    onClickHandler={onClose}>Back</Button>
+            <Button
+                className={`${btnStyles.btn} ${btnStyles["btn-dark"]}`}
+                type="button"
+                onClickHandler={deletePostHandler}>
+                Delete
+            </Button>
+            <Button
+                className={`${btnStyles.btn} ${btnStyles["btn-dark"]}`}
+                type="button"
+                onClickHandler={onClose}>
+                Back
+            </Button>
         </div>
     );
 
