@@ -1,4 +1,6 @@
 import {useState} from 'react';
+import {useNavigate} from "react-router-dom";
+
 import uuid from 'react-uuid';
 import Button from "../UI/Button/Button";
 
@@ -7,12 +9,13 @@ import btnStyles from "../UI/Button/Button.module.css"
 
 
 const AddNewPostForm = (props) => {
-    const {onAddNewPost, onShowAddNewPostForm} = props;
+    const {onAddNewPost, onShowAddPostForm} = props;
+
+    const navigate = useNavigate();
 
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [user, setUser] = useState("");
-
 
     const titleEditHandler = (e) => {
         setTitle(e.target.value);
@@ -24,6 +27,12 @@ const AddNewPostForm = (props) => {
 
     const userSelectHandler = (e) => {
         setUser(e.target.value);
+    }
+
+    const resetAllInputs = () => {
+        setTitle("");
+        setBody("");
+        setUser("");
     }
 
     const submitHandler = (e) => {
@@ -40,6 +49,8 @@ const AddNewPostForm = (props) => {
         }
 
         onAddNewPost(postData);
+        resetAllInputs();
+        navigate("/")
     }
 
     return (
@@ -47,15 +58,15 @@ const AddNewPostForm = (props) => {
             <div className={formStyles["new-post__controls"]}>
                 <div className={formStyles["new-post__control"]}>
                     <label>Title</label>
-                    <input type="text" onChange={titleEditHandler}/>
+                    <input type="text" onChange={titleEditHandler} value={title}/>
                 </div>
                 <div className={formStyles["new-post__control"]}>
                     <label>Post body</label>
-                    <textarea onChange={bodyEditHandler}/>
+                    <textarea onChange={bodyEditHandler} value={body}/>
                 </div>
                 <div className={formStyles["new-post__control"]}>
                     <label>User</label>
-                    <select defaultValue={1} onChange={userSelectHandler}>
+                    <select value={user} onChange={userSelectHandler}>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -63,7 +74,7 @@ const AddNewPostForm = (props) => {
                 </div>
             </div>
             <div className={formStyles["new-post__actions"]}>
-                <Button className={btnStyles.btn} typeButton={"button"} onClickHandler={onShowAddNewPostForm}>Cancel</Button>
+                <Button className={btnStyles.btn} typeButton={"button"} onClickHandler={onShowAddPostForm}>Cancel</Button>
                 <Button className={btnStyles.btn} typeButton={"submit"}>Add Post</Button>
             </div>
         </form>

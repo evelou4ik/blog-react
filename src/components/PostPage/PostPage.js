@@ -1,28 +1,55 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 import Button from "../UI/Button/Button";
 
 import postPageStyles from './PostPage.module.css'
 import btnStyles from '../UI/Button/Button.module.css'
+import {useNavigate, useParams} from "react-router-dom";
+
 
 const PostPage = (props) => {
-    const {onClose, onUpdatePost, onDeletePost, post} = props;
+    const { onUpdatePost, onDeletePost, fetchById, post, urls } = props;
 
-    const [title, setTitle] = useState(post.title);
-    const [body, setBody] = useState(post.body);
+    const [title, setTitle] = useState(post?.title ?? "");
+    const [body, setBody] = useState(post?.body ?? "");
     const [isEditMode, setIsEditMode] = useState(false);
 
-    const postEditHandler = (e) => {
-        e.preventDefault();
+    const navigate = useNavigate();
+    const { idPost } = useParams();
 
-        onUpdatePost(post.id, title, body)
-        setIsEditMode(!isEditMode)
+    const openHomePage = (e) => {
+        e.preventDefault();
+        navigate(urls.urlInitial);
     }
+
+    useEffect(() => {
+        const onSuccess = (post) => {
+            setTitle(post.title);
+            setBody(post.body);
+        }
+
+       if(post) {
+           return;
+       }
+
+        fetchById(idPost, onSuccess)
+
+    }, [])
+
 
     const editModeHandler = (e) => {
         e.preventDefault();
 
         setIsEditMode(!isEditMode)
+        navigate(`${urls.urlPostPage}/${idPost}/edit`);
+    }
+
+    const postEditHandler = (e) => {
+        e.preventDefault();
+
+        onUpdatePost(idPost, title, body)
+        setIsEditMode(!isEditMode)
+        navigate(`${urls.urlPostPage}/${idPost}`);
     }
 
     const titleChangeHandler = (e) => {
@@ -40,8 +67,8 @@ const PostPage = (props) => {
             return;
         }
 
-        onDeletePost(post.id);
-        onClose();
+        onDeletePost(idPost);
+        navigate(urls.urlInitial);
     }
 
     return (
@@ -80,15 +107,9 @@ const PostPage = (props) => {
                 onClickHandler={deletePostHandler}>
                 Delete
             </Button>
-            <Button
-                className={`${btnStyles.btn} ${btnStyles["btn-dark"]}`}
-                type="button"
-                onClickHandler={onClose}>
-                Back
-            </Button>
+            <a href={`${urls.urlInitial}`} className={`${btnStyles.btn} ${btnStyles["btn-dark"]}`} onClick={openHomePage}>Back</a>
         </div>
     );
-
 
 };
 

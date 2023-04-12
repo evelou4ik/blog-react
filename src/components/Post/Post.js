@@ -1,18 +1,22 @@
 import {useState} from 'react';
 
-import Button from "../UI/Button/Button";
-
 import postStyles from './Post.module.css';
 import btnStyles from '../UI/Button/Button.module.css'
+import {useNavigate} from "react-router-dom";
 
 const Post = (props) => {
-    const {dataPost, openPostById} = props;
+    const {dataPost, urls, onPostOpen} = props;
 
-    const [isOpen, setIsOpen] = useState(false);
 
-    const openPostHandler = () => {
-        setIsOpen(!isOpen)
-        openPostById(dataPost.id)
+
+    const linkToPost = `${urls.urlPostPage}/${dataPost.id}`
+    const navigate = useNavigate();
+
+    const openPostHandler = (e) => {
+
+        e.preventDefault();
+        onPostOpen(dataPost.id)
+        navigate(linkToPost)
     }
 
     return (
@@ -23,7 +27,7 @@ const Post = (props) => {
                     <p>{dataPost.body}</p>
                 </div>
                 <div className={postStyles.post__footer}>
-                    <Button className={btnStyles.btn} typeButton={"button"} onClickHandler={openPostHandler}>Read more</Button>
+                    <a href={linkToPost} className={btnStyles.btn} onClick={openPostHandler}>Read more</a>
                 </div>
             </div>
         </li>

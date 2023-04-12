@@ -2,12 +2,12 @@ import PostList from "../PostList/PostList";
 import AddNewPost from "../AddNewPost/AddNewPost";
 
 const Posts = (props) => {
-    const {posts, openPostById, onAddNewPost} = props;
+    const {posts,onAddNewPost, urls, onPostOpen} = props;
 
     return (
         <div>
-            <AddNewPost onAddNewPost={onAddNewPost}/>
-            <PostList openPostById={openPostById} posts={posts}/>
+            <AddNewPost onAddNewPost={onAddNewPost} urls={urls}/>
+            <PostList posts={posts} urls={urls} onPostOpen={onPostOpen}/>
         </div>
     );
 };

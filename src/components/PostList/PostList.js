@@ -4,7 +4,7 @@ import Post from "../Post/Post";
 import styles from './PostList.module.css'
 
 const PostList = (props) => {
-    const {posts, openPostById} = props;
+    const {posts, urls, onPostOpen} = props;
 
     const sortedPostsByDate = posts.sort((a,b) => b.dateOfCreate - a.dateOfCreate);
 
@@ -13,7 +13,7 @@ const PostList = (props) => {
             {
                 sortedPostsByDate.map(post => {
                     return (
-                        <Post openPostById={openPostById} key={uuid()} dataPost={post} />
+                        <Post key={uuid()} dataPost={post} urls={urls} onPostOpen={onPostOpen}/>
                     )
                 })
             }

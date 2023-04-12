@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
-import {Routes, Route, Link} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Route, Routes} from "react-router-dom";
+
 import Posts from "./components/Posts/Posts";
 import PostPage from "./components/PostPage/PostPage";
-
 
 
 function App() {
@@ -11,8 +11,11 @@ function App() {
     const [posts, setPosts] = useState([]);
     const [openedPost, setOpenedPost] = useState(null);
 
-    const urlOfPosts = "http://localhost:3001/posts";
-    const isPostOpen = !!openedPost;
+    const urls = {
+        urlOfPosts: "http://localhost:3001/posts",
+        urlInitial: "/",
+        urlPostPage: "/postpage",
+    }
 
     const fetchApiHandler = async (url, method, body) => {
         const options = {
@@ -27,11 +30,10 @@ function App() {
         }
 
         return await fetch(url, options);
-
     }
 
     const requestAllPostsHandler = () => {
-        fetchApiHandler(urlOfPosts)
+        fetchApiHandler(urls.urlOfPosts)
             .then(response => response.json())
             .then(result => {
                     setPosts(result)
@@ -40,6 +42,7 @@ function App() {
                     setError(error);
                 })
             .finally(() => {
+
                 setIsLoaded(false);
             })
     }
@@ -48,32 +51,37 @@ function App() {
         requestAllPostsHandler()
     }, []);
 
-    const openPostById = (idPost) => {
-        const openedPost = posts.find(el => el.id === idPost);
-
-        setOpenedPost(openedPost);
+    const fetchById = (postId, onSuccess) => {
+        fetchApiHandler(`${urls.urlOfPosts}/${postId}`)
+            .then(response => response.json())
+            .then(result => {
+                onSuccess(result)
+                },
+                (error) => {
+                    setError(error);
+                })
     }
 
-    const closeHandler = () => {
-        setOpenedPost(null);
+    const openPostHandler = (postId) => {
+        setOpenedPost(posts.find((post) => post.id === postId))
     }
 
     const updatePostHandler = (postId, postTitle, postBody) => {
-        fetchApiHandler(`${urlOfPosts}/${postId}`, 'PATCH', {title: postTitle, body: postBody})
+        fetchApiHandler(`${urls.urlOfPosts}/${postId}`, 'PATCH', {title: postTitle, body: postBody})
             .then(() => {
                 requestAllPostsHandler()
             })
     }
 
     const addNewPostHandler = (newPost) => {
-        fetchApiHandler(urlOfPosts, 'POST', {...newPost})
+        fetchApiHandler(urls.urlOfPosts, 'POST', {...newPost})
             .then(() => {
                 requestAllPostsHandler()
             })
     }
 
     const deletePostHandler = (postId) => {
-        fetchApiHandler(`${urlOfPosts}/${postId}`, 'DELETE')
+        fetchApiHandler(`${urls.urlOfPosts}/${postId}`, 'DELETE')
             .then(() => {
                 requestAllPostsHandler()
             })
@@ -88,18 +96,54 @@ function App() {
     }
 
     return (
-        <div className="App">
-            {
-                isPostOpen ?
+        <Routes>
+            <Route
+                path={urls.urlInitial}
+                element={
+                    <Posts
+                        onPostOpen={openPostHandler}
+                        onAddNewPost={addNewPostHandler}
+                        openPostById={fetchById}
+                        posts={posts}
+                        urls={urls}
+                    />
+                }
+            />
+            <Route
+                path={`${urls.urlInitial}/create`}
+                element={
+                    <Posts
+                        onPostOpen={openPostHandler}
+                        onAddNewPost={addNewPostHandler}
+                        openPostById={fetchById}
+                        posts={posts}
+                        urlPostPage={urls.urlPostPage}
+                    />
+                }
+            />
+            <Route
+                path={`/${urls.urlPostPage}/:idPost`}
+                element={
                     <PostPage
                         onUpdatePost={updatePostHandler}
                         onDeletePost={deletePostHandler}
-                        onClose={closeHandler}
-                        post={openedPost}/>
-                    :
-                    <Posts onAddNewPost={addNewPostHandler} openPostById={openPostById} posts={posts}/>
-            }
-        </div>
+                        fetchById={fetchById}
+                        post={openedPost}
+                        urls={urls}
+                    />}
+            />
+            <Route
+                path={`/${urls.urlPostPage}/:idPost/edit`}
+                element={
+                    <PostPage
+                        onUpdatePost={updatePostHandler}
+                        onDeletePost={deletePostHandler}
+                        fetchById={fetchById}
+                        post={openedPost}
+                        urls={urls}
+                    />}
+            />
+        </Routes>
     );
 }
 
