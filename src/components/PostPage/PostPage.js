@@ -1,40 +1,49 @@
 import {useState, useEffect} from 'react';
+import {useNavigate, useParams, useLocation} from "react-router-dom";
 
 import Button from "../UI/Button/Button";
-
 import postPageStyles from './PostPage.module.css'
 import btnStyles from '../UI/Button/Button.module.css'
-import {useNavigate, useParams} from "react-router-dom";
-
 
 const PostPage = (props) => {
-    const { onUpdatePost, onDeletePost, fetchById, post, urls } = props;
+    const { onUpdatePost, onDeletePost, fetchById, post, urls, onCheckIfValidUUID, onCheckAPostExist } = props;
 
     const [title, setTitle] = useState(post?.title ?? "");
     const [body, setBody] = useState(post?.body ?? "");
     const [isEditMode, setIsEditMode] = useState(false);
 
+    const {pathname: location} = useLocation();
     const navigate = useNavigate();
     const { idPost } = useParams();
 
     const openHomePage = (e) => {
         e.preventDefault();
-        navigate(urls.urlInitial);
+        navigate(-1);
     }
 
     useEffect(() => {
-        const onSuccess = (post) => {
-            setTitle(post.title);
-            setBody(post.body);
+            const post = onCheckAPostExist(idPost)
+
+            if(!onCheckIfValidUUID(idPost) && !post)  {
+                navigate(`${urls.urlInitial}*`)
+            }
+
+            const onSuccess = (post) => {
+                setTitle(post.title);
+                setBody(post.body);
+            }
+
+            fetchById(idPost, onSuccess)
+    }, [])
+
+    useEffect(() => {
+        if(!location.includes("/edit")) {
+            setIsEditMode(false)
+            return;
         }
 
-       if(post) {
-           return;
-       }
-
-        fetchById(idPost, onSuccess)
-
-    }, [])
+        setIsEditMode(true)
+    }, [location])
 
 
     const editModeHandler = (e) => {

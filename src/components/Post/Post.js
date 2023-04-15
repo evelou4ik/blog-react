@@ -1,20 +1,21 @@
-import {useState} from 'react';
+import {useNavigate} from "react-router-dom";
 
 import postStyles from './Post.module.css';
 import btnStyles from '../UI/Button/Button.module.css'
-import {useNavigate} from "react-router-dom";
 
 const Post = (props) => {
-    const {dataPost, urls, onPostOpen} = props;
-
-
+    const {dataPost, urls, onPostOpen, onCheckIfValidUUID} = props;
 
     const linkToPost = `${urls.urlPostPage}/${dataPost.id}`
     const navigate = useNavigate();
 
     const openPostHandler = (e) => {
-
         e.preventDefault();
+
+        if(!onCheckIfValidUUID(dataPost.id)) {
+           navigate(`${urls.urlInitial}*`)
+        }
+
         onPostOpen(dataPost.id)
         navigate(linkToPost)
     }

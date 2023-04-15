@@ -1,53 +1,11 @@
 {
   "posts": [
     {
-      "userId": 1,
-      "id": 2,
-      "title": "2",
-      "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque",
-      "dateOfCreate": 1680706866732
-    },
-    {
-      "userId": 1,
-      "id": 3,
-      "title": "3",
-      "body": "ut aspernatur corporis harum nihil quis provident sequi\nmollitia nobis aliquid molestiae\nperspiciatis et ea nemo ab reprehenderit accusantium quas\nvoluptate dolores velit et doloremque molestiae",
-      "dateOfCreate": 1680706867147
-    },
-    {
-      "userId": 1,
-      "id": 4,
-      "title": "4",
-      "body": "dolore placeat quibusdam ea quo vitae\nmagni quis enim qui quis quo nemo aut saepe\nquidem repellat excepturi ut quia\nsunt ut sequi eos ea sed quas",
-      "dateOfCreate": 1680706867534
-    },
-    {
-      "userId": 1,
-      "id": 7,
-      "title": "7331313131",
-      "body": "quo et expedita modi cum officia vel magni\ndoloribus qui repudiandae\nvero nisi sit\nquos veniam quod sed accusamus veritatis error",
-      "dateOfCreate": 1680706868589
-    },
-    {
-      "userId": 2,
-      "id": 1680707522372,
-      "title": "dsada321313131",
-      "body": "32155555",
-      "dateOfCreate": 1680707522372
-    },
-    {
       "userId": 2,
       "id": "30ac5ffb-ca09-bebe-2e19-19910821397f",
       "title": "32131",
       "body": "dsadad321",
       "dateOfCreate": 1680874136101
-    },
-    {
-      "userId": 0,
-      "id": "c41fa750-befc-439d-f953-1d27a7d44ed9",
-      "title": "",
-      "body": "",
-      "dateOfCreate": 1681304021744
     },
     {
       "userId": 2,
@@ -90,6 +48,20 @@
       "title": "32151566666",
       "body": "341da321",
       "dateOfCreate": 1681304392121
+    },
+    {
+      "userId": 2,
+      "id": "631f63cc-9ac1-60fa-de12-b00fcd38abda",
+      "title": "ВЫФВФ",
+      "body": "321321",
+      "dateOfCreate": 1681395639655
+    },
+    {
+      "userId": 3,
+      "id": "1b83cacf-4abe-825a-4e6f-497343df9718",
+      "title": "32131В",
+      "body": "ЫФ321",
+      "dateOfCreate": 1681395647763
     }
   ]
 }

@@ -1,29 +1,38 @@
-import {useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from 'react';
+import {useNavigate, useLocation} from "react-router-dom";
 
 import AddNewPostForm from "./AddNewPostForm";
 import Button from "../UI/Button/Button";
-
 import formStyles from '../Posts/Posts.module.css'
 import btnStyles from '../UI/Button/Button.module.css';
 
 const AddNewPost = (props) => {
-    const {onAddNewPost, urls} = props;
+    const {onAddNewPost} = props;
 
     const [isCreateMode, setIsCreateMode] = useState(false);
 
-    const navigate = useNavigate()
+    const {pathname: location} = useLocation();
+    const navigate = useNavigate();
 
     const showAddPostFormHandler = () => {
         setIsCreateMode(!isCreateMode);
 
         if(isCreateMode) {
-            navigate(`${urls.urlInitial}`)
+            navigate(-1)
             return;
         }
 
         navigate('/create')
     }
+
+    useEffect(() => {
+        if(!location.includes("create")) {
+            setIsCreateMode(false)
+            return;
+        }
+
+        setIsCreateMode(true)
+    }, [location])
 
     return (
         <div className={`${formStyles["form-content"]}`}>
