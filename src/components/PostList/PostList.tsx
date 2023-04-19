@@ -1,18 +1,20 @@
 import React from 'react';
 import uuid from 'react-uuid';
 
+import { PostInterface, Urls } from '../types/types';
+
 import Post from '../Post/Post';
 
 import styles from './PostList.module.css';
 
-interface PostListProps {
-  posts: object;
-  urls: object;
-  onPostOpen: void;
-  onCheckIfValidUUID: <T>(str: T) => boolean;
+interface Props {
+  posts: PostInterface[];
+  urls: Urls;
+  onPostOpen: (postId: string) => void;
+  onCheckIfValidUUID: (str: string) => boolean;
 }
 
-const PostList: React.FC<PostListProps> = (props) => {
+const PostList: React.FC<Props> = (props) => {
   const { posts, urls, onPostOpen, onCheckIfValidUUID } = props;
 
   const sortedPostsByDate = posts.sort((a, b) => b.dateOfCreate - a.dateOfCreate);
@@ -23,7 +25,7 @@ const PostList: React.FC<PostListProps> = (props) => {
         return (
           <Post
             key={uuid()}
-            dataPost={post}
+            post={post}
             urls={urls}
             onPostOpen={onPostOpen}
             onCheckIfValidUUID={onCheckIfValidUUID}

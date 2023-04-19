@@ -1,13 +1,13 @@
 import React from 'react';
 
-interface ButtonProps {
+interface Props {
   className: string;
-  typeButton: 'submit' | 'reset' | 'button' | undefined;
+  typeButton: 'submit' | 'reset' | 'button';
   children?: React.ReactNode;
-  onClickHandler: <T>() => T;
+  onClickHandler?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = (props) => {
+const Button: React.FC<Props> = (props) => {
   const { className, typeButton, children, onClickHandler } = props;
 
   return (

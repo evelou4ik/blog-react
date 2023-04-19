@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
+import { QuizParams, PostInterface, Urls } from '../types/types';
+
 import Button from '../UI/Button/Button';
 
 import btnStyles from '../UI/Button/Button.module.css';
-
 import postPageStyles from './PostPage.module.css';
 
-type PostPageProps = {
-  onUpdatePost: <T>(postId: T, postTitle: titleState<string>, postBody: object) => void;
-  onDeletePost: <T>(postId: T) => void;
-  onCheckIfValidUUID: <T>(str: T) => boolean;
-  onCheckAPostExist: <T>(postId: T) => boolean;
-  fetchById: <T>(postId: T, onSuccess: (result: object) => void) => void;
-  post: object;
-  urls: object;
-};
-
-interface titleState<T> {
-  title: T;
+interface Props {
+  onUpdatePost: (postId: string, postTitle: string, postBody: string) => void;
+  onDeletePost: (postId: string) => void;
+  onCheckIfValidUUID: (str: string) => boolean;
+  onCheckAPostExist: (postId: string) => boolean;
+  fetchById: (postId: string, onSuccess: (result: PostInterface) => void) => Promise<void>;
+  post: PostInterface | null;
+  urls: Urls;
 }
 
-const PostPage: React.FC<PostPageProps> = (props) => {
+const PostPage: React.FC<Props> = (props) => {
   const {
     onUpdatePost,
     onDeletePost,
@@ -32,32 +29,32 @@ const PostPage: React.FC<PostPageProps> = (props) => {
     urls
   } = props;
 
-  const [title, setTitle] = useState<titleState<string>>(post.title ?? '');
-  const [body, setBody] = useState(post?.body ?? '');
+  const [title, setTitle] = useState<string>(post?.title ?? '');
+  const [body, setBody] = useState<string>(post?.body ?? '');
   const [isEditMode, setIsEditMode] = useState(false);
 
   const { pathname: location } = useLocation();
   const navigate = useNavigate();
-  const { idPost } = useParams();
+  const { idPost } = useParams<QuizParams>();
 
-  const openHomePage = (e) => {
+  const openHomePage = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
-    navigate(-1);
+    navigate(urls.urlInitial);
   };
 
   useEffect(() => {
-    const post = onCheckAPostExist(idPost);
+    const post = onCheckAPostExist(idPost!);
 
-    if (!onCheckIfValidUUID(idPost) && !post) {
+    if (!onCheckIfValidUUID(idPost!) && !post) {
       navigate(`${urls.urlInitial}*`);
     }
 
-    const onSuccess = (post) => {
+    const onSuccess = (post: PostInterface) => {
       setTitle(post.title);
       setBody(post.body);
     };
 
-    fetchById(idPost, onSuccess);
+    fetchById(idPost!, onSuccess);
   }, []);
 
   useEffect(() => {
@@ -69,26 +66,26 @@ const PostPage: React.FC<PostPageProps> = (props) => {
     setIsEditMode(true);
   }, [location]);
 
-  const editModeHandler = (e) => {
+  const editModeHandler = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
 
     setIsEditMode(!isEditMode);
     navigate(`${urls.urlPostPage}/${idPost}/edit`);
   };
 
-  const postEditHandler = (e) => {
+  const postEditHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    onUpdatePost(idPost, title, body);
+    onUpdatePost(idPost!, title, body);
     setIsEditMode(!isEditMode);
     navigate(`${urls.urlPostPage}/${idPost}`);
   };
 
-  const titleChangeHandler = (e) => {
+  const titleChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setTitle(e.target.value);
   };
 
-  const bodyChangeHandler = (e) => {
+  const bodyChangeHandler: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setBody(e.target.value);
   };
 
@@ -99,13 +96,13 @@ const PostPage: React.FC<PostPageProps> = (props) => {
       return;
     }
 
-    onDeletePost(idPost);
+    onDeletePost(idPost!);
     navigate(urls.urlInitial);
   };
 
   return (
     <div className={postPageStyles['post-page']}>
-      <form>
+      <form onSubmit={postEditHandler}>
         <label>
           <span>Title:</span>
           <input onChange={titleChangeHandler} value={title} type="text" readOnly={!isEditMode} />
@@ -115,19 +112,16 @@ const PostPage: React.FC<PostPageProps> = (props) => {
           <textarea onChange={bodyChangeHandler} value={body} readOnly={!isEditMode} />
         </label>
         {isEditMode ? (
-          <Button
-            className={`${btnStyles.btn} ${btnStyles['btn-dark']}`}
-            typeButton={'submit'}
-            onClickHandler={postEditHandler}>
+          <Button className={`${btnStyles.btn} ${btnStyles['btn-dark']}`} typeButton={'submit'}>
             Update
           </Button>
         ) : (
-          <Button
+          <a
+            href={`${urls.urlPostPage}/${idPost}`}
             className={`${btnStyles.btn} ${btnStyles['btn-dark']}`}
-            typeButton={'button'}
-            onClickHandler={editModeHandler}>
+            onClick={editModeHandler}>
             Change
-          </Button>
+          </a>
         )}
       </form>
       <Button

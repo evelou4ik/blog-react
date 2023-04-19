@@ -1,31 +1,32 @@
 import React from 'react';
+import { PostInterface, Urls } from '../types/types';
 
 import { useNavigate } from 'react-router-dom';
 
 import btnStyles from '../UI/Button/Button.module.css';
 import postStyles from './Post.module.css';
 
-interface PostProps {
-  dataPost: object;
-  urls: object;
-  onPostOpen: void;
-  onCheckIfValidUUID: <T>(str: T) => boolean;
+interface Props {
+  post: PostInterface;
+  urls: Urls;
+  onPostOpen: (postId: string) => void;
+  onCheckIfValidUUID: (str: string) => boolean;
 }
 
-const Post: React.FC<PostProps> = (props) => {
-  const { dataPost, urls, onPostOpen, onCheckIfValidUUID } = props;
+const Post: React.FC<Props> = (props) => {
+  const { post, urls, onPostOpen, onCheckIfValidUUID } = props;
 
-  const linkToPost = `${urls.urlPostPage}/${dataPost.id}`;
+  const linkToPost = `${urls.urlPostPage}/${post.id}`;
   const navigate = useNavigate();
 
-  const openPostHandler = (e) => {
+  const openPostHandler = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
 
-    if (!onCheckIfValidUUID(dataPost.id)) {
+    if (!onCheckIfValidUUID(post.id)) {
       navigate(`${urls.urlInitial}*`);
     }
 
-    onPostOpen(dataPost.id);
+    onPostOpen(post.id);
     navigate(linkToPost);
   };
 
@@ -33,8 +34,8 @@ const Post: React.FC<PostProps> = (props) => {
     <li className={postStyles.post}>
       <div className={postStyles['post-content']}>
         <div className="post__body">
-          <span>{dataPost.title}</span>
-          <p>{dataPost.body}</p>
+          <span>{post.title}</span>
+          <p>{post.body}</p>
         </div>
         <div className={postStyles.post__footer}>
           <a href={linkToPost} className={btnStyles.btn} onClick={openPostHandler}>

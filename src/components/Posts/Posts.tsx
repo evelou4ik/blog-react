@@ -1,18 +1,19 @@
+import React from 'react';
+import { PostInterface, Urls } from '../types/types';
+
 import PostList from '../PostList/PostList';
 import AddNewPost from '../AddNewPost/AddNewPost';
-import React from 'react';
 
-interface PostsProps {
-  posts: object;
-  urls: object;
-  onAddNewPost: void;
-  onPostOpen: void;
-  onCheckIfValidUUID: <T>(str: T) => boolean;
+interface Props {
+  posts: PostInterface[];
+  urls: Urls;
+  onAddNewPost: (newPost: PostInterface) => void;
+  onPostOpen: (postId: string) => void;
+  onCheckIfValidUUID: (str: string) => boolean;
 }
 
-const Posts: React.FC<PostsProps> = (props) => {
-  const { posts, onAddNewPost, urls, onPostOpen, onCheckIfValidUUID } = props;
-
+const Posts: React.FC<Props> = (props) => {
+  const { posts, urls, onAddNewPost, onPostOpen, onCheckIfValidUUID } = props;
   return (
     <div>
       <AddNewPost onAddNewPost={onAddNewPost} />

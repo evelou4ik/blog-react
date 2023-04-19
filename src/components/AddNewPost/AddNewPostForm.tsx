@@ -1,52 +1,52 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import uuid from 'react-uuid';
+
+import { PostInterface } from '../types/types';
 
 import Button from '../UI/Button/Button';
 
 import formStyles from '../AddNewPost/AddNewPostForm.module.css';
-
 import btnStyles from '../UI/Button/Button.module.css';
 
-interface postFormProps {
-  onAddNewPost: void;
-  onShowAddPostForm: void;
+interface Props {
+  onAddNewPost: (newPost: PostInterface) => void;
+  onShowAddPostForm: () => void;
 }
 
-const AddNewPostForm = (props: postFormProps) => {
+const AddNewPostForm: React.FC<Props> = (props) => {
   const { onAddNewPost, onShowAddPostForm } = props;
-
-  const navigate = useNavigate();
 
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [user, setUser] = useState('');
 
-  const titleEditHandler = (e) => {
-    setTitle(e.target.value);
+  const navigate = useNavigate();
+
+  const titleEditHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setTitle(e.currentTarget.value);
   };
 
-  const bodyEditHandler = (e) => {
-    setBody(e.target.value);
+  const bodyEditHandler: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    setBody(e.currentTarget.value);
   };
 
-  const userSelectHandler = (e) => {
-    setUser(e.target.value);
+  const userSelectHandler: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setUser(e.currentTarget.value);
   };
 
-  const resetAllInputs = () => {
+  const resetAllInputs = (): void => {
     setTitle('');
     setBody('');
     setUser('');
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
     const date = new Date().getTime();
 
-    const postData = {
+    const postData: PostInterface = {
       userId: Number(user),
       id: uuid(),
       title: title,
@@ -83,7 +83,7 @@ const AddNewPostForm = (props: postFormProps) => {
         <Button className={btnStyles.btn} typeButton={'button'} onClickHandler={onShowAddPostForm}>
           Cancel
         </Button>
-        <Button className={btnStyles.btn} typeButton={'submit'} onClickHandler={}>
+        <Button className={btnStyles.btn} typeButton={'submit'}>
           Add Post
         </Button>
       </div>

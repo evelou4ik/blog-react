@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react';
+import { PostInterface } from '../types/types';
+
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import AddNewPostForm from './AddNewPostForm';
 import Button from '../UI/Button/Button';
 
 import formStyles from '../Posts/Posts.module.css';
-
 import btnStyles from '../UI/Button/Button.module.css';
 
-import AddNewPostForm from './AddNewPostForm';
-
-interface AddNewPostProps {
-  onAddNewPost: void;
+interface Props {
+  onAddNewPost: (newPost: PostInterface) => void;
 }
 
-const AddNewPost = (props: AddNewPostProps) => {
+const AddNewPost: React.FC<Props> = (props) => {
   const { onAddNewPost } = props;
 
   const [isCreateMode, setIsCreateMode] = useState(false);
